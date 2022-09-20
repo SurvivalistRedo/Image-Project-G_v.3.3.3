@@ -10,30 +10,12 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "NeuralInput",
-"language": "GDScript",
-"path": "res://Scripts/Neural_Input.gd"
-}, {
-"base": "Node",
-"class": "NeuralNet",
-"language": "GDScript",
-"path": "res://Scripts/Neural_Net.gd"
-}, {
-"base": "Node",
 "class": "NeuralNetwork",
 "language": "GDScript",
 "path": "res://Scripts/Neural_Network.gd"
-}, {
-"base": "Node",
-"class": "NeuralNode",
-"language": "GDScript",
-"path": "res://Scripts/Neural_Node.gd"
 } ]
 _global_script_class_icons={
-"NeuralInput": "",
-"NeuralNet": "",
-"NeuralNetwork": "",
-"NeuralNode": ""
+"NeuralNetwork": ""
 }
 
 [application]
