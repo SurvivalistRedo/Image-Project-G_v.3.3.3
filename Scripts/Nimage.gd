@@ -211,12 +211,12 @@ func processNeuralImage(reverseIfBad):
 	img = Image.new()
 	img.create_from_data(resolution, resolution, false, Image.FORMAT_RGB8, PoolByteArray(aOutputMatrix))
 	img.lock()
-	img.save_png('res://aaa.png')
+	img.save_png('res://Images/aaa.png')
 	
 	var rad = Image.new()
 	rad.create(600,600,false,Image.FORMAT_RGB8)
 	rad.lock()
-	rad = load('res://Radiation_warning_symbol.png')
+	rad = load('res://Images/Radiation_warning_symbol.png')
 	
 	#var texture = ImageTexture.new()
 	#texture.load('res://Radiation_warning_symbol.png')

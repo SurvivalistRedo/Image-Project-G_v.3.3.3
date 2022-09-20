@@ -21,7 +21,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Grid Sampler v.3.3.3"
-run/main_scene="res://world.tscn"
+run/main_scene="res://Scenes/world.tscn"
 
 [display]
 

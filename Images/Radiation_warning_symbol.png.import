@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/Radiation_warning_symbol.png-97de19ed5eb7b631d1a898d7fa489f54.image"
+
+[deps]
+
+source_file="res://Images/Radiation_warning_symbol.png"
+dest_files=[ "res://.import/Radiation_warning_symbol.png-97de19ed5eb7b631d1a898d7fa489f54.image" ]
+
+[params]
+
