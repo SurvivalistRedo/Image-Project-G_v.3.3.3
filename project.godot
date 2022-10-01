@@ -10,11 +10,17 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
+"class": "ImageHandler",
+"language": "GDScript",
+"path": "res://Scripts/Image_Handler.gd"
+}, {
+"base": "Node",
 "class": "NeuralNetwork",
 "language": "GDScript",
 "path": "res://Scripts/Neural_Network.gd"
 } ]
 _global_script_class_icons={
+"ImageHandler": "",
 "NeuralNetwork": ""
 }
 
