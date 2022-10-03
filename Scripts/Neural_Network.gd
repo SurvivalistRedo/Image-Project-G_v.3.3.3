@@ -1,6 +1,6 @@
 extends Node
 
-class_name NeuralNetwork
+class_name Neural_Network
 
 var nodesPerLayer = [] # Amount of Nodes per each layer, with quantity of layers being assumed from nodesPerLayer.size()
 var networkArray = []  # Array of Network
@@ -35,8 +35,8 @@ func initialize(inputArraySize,iNodesPerLayer):
 			var multiplier_array_buffer = []
 			var bias_float_buffer = 0
 			for c in range(0,PLNQ):
-				multiplier_array_buffer.append(round(rand_range(-multiplier_range,multiplier_range)*10.0)/10.0)
-				bias_float_buffer = round(rand_range(-bias_range,bias_range)*10.0)/10.0
+				multiplier_array_buffer.append(rand_range(-multiplier_range,multiplier_range))
+				bias_float_buffer = rand_range(-bias_range,bias_range)
 			networkArray[layer].append([multiplier_array_buffer,bias_float_buffer])
 	printNetwork()
 	processOutputs()
@@ -119,10 +119,10 @@ func generateRandomStepArray(currentLayer,i_array_buffer,i_range):
 	i_array_buffer = []
 	if currentLayer == 0:
 		for i in range(0,inputArray.size()):
-			i_array_buffer.append(round(rand_range(-i_range,i_range)*10.0)/10.0)
+			i_array_buffer.append(rand_range(-i_range,i_range))
 	else:
 		for i in range(0,nodesPerLayer[currentLayer-1]):
-			i_array_buffer.append(round(rand_range(-i_range,i_range)*10.0)/10.0)
+			i_array_buffer.append(rand_range(-i_range,i_range))
 	return i_array_buffer.duplicate(true)
 
 func NetParametersRandomStep():
@@ -139,7 +139,7 @@ func NetParametersRandomStep():
 			NAS_nBS[l].append([])
 			
 			nMASB = generateRandomStepArray(l,nMASB.duplicate(true),multiplier_range)
-			nBSB = (round(rand_range(-bias_range,bias_range)*10.0)/10.0)
+			nBSB = rand_range(-bias_range,bias_range)
 			NAS_nPS_H[NAS_nPS_H.size()-1][l][n] = [nMASB.duplicate(true),nBSB]
 			
 			NAS_nMAS[l][n].append(nMASB.duplicate(true))
