@@ -12,9 +12,6 @@ var NAS_nBS = []  # Network Array Step of node Bias Steps
 var nMASB = []    # node Multiplier Array Step Buffer
 var nBSB = 0.0    # node Bias Step Buffer
 
-var multiplier_range = 0.0
-var bias_range = 0.0
-
 func initialize(inputArraySize,iNodesPerLayer):
 	# Creates Network
 	nodesPerLayer = iNodesPerLayer
@@ -35,8 +32,8 @@ func initialize(inputArraySize,iNodesPerLayer):
 			var multiplier_array_buffer = []
 			var bias_float_buffer = 0
 			for c in range(0,PLNQ):
-				multiplier_array_buffer.append(rand_range(-multiplier_range,multiplier_range))
-				bias_float_buffer = rand_range(-bias_range,bias_range)
+				multiplier_array_buffer.append(rand_range(-Global.multRange,Global.multRange))
+				bias_float_buffer = rand_range(-Global.biasRange,Global.biasRange)
 			networkArray[layer].append([multiplier_array_buffer,bias_float_buffer])
 	printNetwork()
 	processOutputs()
@@ -62,6 +59,12 @@ func printNAS_nPS_H():
 				print("Node",node,": ",NAS_nPS_H[i][layer][node])
 	print()
 
+func Sigmoid(x):
+	return 1 - (2/(1+pow(2.718,x)))
+func SigmoidF(x):
+	return 1 - (1/(1+pow(2.718,x)))
+func f(x):
+	return (x+1.0)/2.0
 func GeLu(x):
 	return (x)/(1.0+(pow(2.718,(-1.702*x))))
 func ReLu(x):
@@ -71,7 +74,7 @@ func processNodeOutput(node,inputs):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
-	return GeLu(sum+node[1])
+	return Sigmoid(sum+node[1])
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]
@@ -92,7 +95,8 @@ func processOutputs():
 			for node in range(0,nodesPerLayer[layer]):
 				currentLayerOutputs.append(processNodeOutput(networkArray[layer][node].duplicate(true),previousLayerOutputs.duplicate(true)))
 			previousLayerOutputs = currentLayerOutputs.duplicate(true)
-	var color_buffer = Color.from_hsv(currentLayerOutputs.duplicate(true)[0],currentLayerOutputs.duplicate(true)[1],currentLayerOutputs.duplicate(true)[2])
+	
+	var color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
 	return [color_buffer.r,color_buffer.g,color_buffer.b]
 func pairArraySubtract(array1,array2):
 	var array_buffer = []
@@ -138,8 +142,8 @@ func NetParametersRandomStep():
 			NAS_nMAS[l].append([])
 			NAS_nBS[l].append([])
 			
-			nMASB = generateRandomStepArray(l,nMASB.duplicate(true),multiplier_range)
-			nBSB = rand_range(-bias_range,bias_range)
+			nMASB = generateRandomStepArray(l,nMASB.duplicate(true),Global.multRange)
+			nBSB = rand_range(-Global.biasRange,Global.biasRange)
 			NAS_nPS_H[NAS_nPS_H.size()-1][l][n] = [nMASB.duplicate(true),nBSB]
 			
 			NAS_nMAS[l][n].append(nMASB.duplicate(true))

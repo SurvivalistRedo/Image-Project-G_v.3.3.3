@@ -12,7 +12,12 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Image_Handler",
 "language": "GDScript",
-"path": "res://Scripts/Image_Handler.gd"
+"path": "res://Scripts/Image-Handler.gd"
+}, {
+"base": "Node",
+"class": "Input_Handler",
+"language": "GDScript",
+"path": "res://Scripts/Input-Handler.gd"
 }, {
 "base": "Node",
 "class": "Neural_Network",
@@ -21,6 +26,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Image_Handler": "",
+"Input_Handler": "",
 "Neural_Network": ""
 }
 
@@ -28,6 +34,10 @@ _global_script_class_icons={
 
 config/name="Grid Sampler v.3.3.3"
 run/main_scene="res://Scenes/world.tscn"
+
+[autoload]
+
+Global="*res://Scripts/Global.gd"
 
 [display]
 

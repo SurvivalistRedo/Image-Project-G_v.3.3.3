@@ -2,21 +2,15 @@ extends Sprite
 
 var NeuralNet
 var ImageHandler
+var InputHandler
 
 var record = 0
 var eRecord = 0
 
-var resolution = 80
+var resolution = 20
 var graph_size = 5
 
-var Iterations = 1000
-var currentIteration = 1000
 var x = false
-
-var s
-
-var mR = 1.0
-var bR = 1.0
 
 var printProgress = true
 
@@ -29,12 +23,13 @@ var referencePath = "no input"
 func _ready():
 	get_tree().get_root().set_transparent_background(true)
 	randomize()
+	InputHandler = Input_Handler.new()
 	ImageHandler = Image_Handler.new()
 	NeuralNet = Neural_Network.new()
-	NeuralNet.initialize(2,[50,5,5,3])
+	NeuralNet.initialize(2,[50,3])
 
-func _process(delta):
-	selector()
+func _process(_delta):
+	InputHandler.selector()
 	
 	if Input.is_action_just_pressed("ui_focus_next"):
 		processNeuralImage(NeuralNet,contrast,dontReverseIfWorse)
@@ -68,61 +63,22 @@ func _process(delta):
 	if Input.is_action_just_pressed("P"):
 		NeuralNet.printNetwork()
 
-func selector():
-	if Input.is_action_pressed("1"):
-		s = 1
-	if Input.is_action_pressed("2"):
-		s = 2
-	if Input.is_action_pressed("3"):
-		s = 3
-	if Input.is_action_pressed("4"):
-		s = 4
-	match(s):
-		1:
-			pass
-		2:
-			if Input.is_action_pressed("up"):
-				mR += 0.01
-				print([mR,bR,Iterations],currentIteration)
-			if Input.is_action_pressed("down"):
-				mR -= 0.01
-				print([mR,bR,Iterations],currentIteration)
-		3:
-			if Input.is_action_pressed("up"):
-				bR += 0.01
-				print([mR,bR,Iterations],currentIteration)
-			if Input.is_action_pressed("down"):
-				bR -= 0.01
-				print([mR,bR,Iterations],currentIteration)
-		4:
-			if Input.is_action_pressed("up"):
-				Iterations += 5.0
-				currentIteration += 5.0
-				print([mR,bR,Iterations],currentIteration)
-			if Input.is_action_pressed("down"):
-				Iterations -= 5.0
-				print([mR,bR,Iterations],currentIteration)
-		_:
-			pass
-	NeuralNet.multiplier_range = mR
-	NeuralNet.bias_range = bR
-
 func iterate():
-	if x and currentIteration < Iterations:
-		if currentIteration < Iterations:
+	if x and Global.currentIteration < Global.Iterations:
+		if Global.currentIteration < Global.Iterations:
 			NeuralNet.NetParametersRandomStep()
 			processNeuralImage(NeuralNet,referenceError,doReverseIfWorse)
-			print(currentIteration+1,"/",Iterations)
-			currentIteration += 1
+			print(Global.currentIteration+1,"/",Global.Iterations)
+			Global.currentIteration += 1
 		else:
 			x = false
-			currentIteration = 0
+			Global.currentIteration = 0
 			processNeuralImage(NeuralNet,referenceError,dontReverseIfWorse)
-			print(currentIteration+1,"/",Iterations)
+			print(Global.currentIteration+1,"/",Global.Iterations)
 	else:
 		if Input.is_action_just_pressed("ui_up"):
 			x = true
-			currentIteration = 0
+			Global.currentIteration = 0
 
 func processNeuralOutputMatrix(iNeuralNet):
 	var NeuralOutputMatrix = []
@@ -138,10 +94,10 @@ func processNeuralOutputMatrix(iNeuralNet):
 	return NeuralOutputMatrix.duplicate(true)
 
 func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
-	var aOutputMatrix = ImageHandler.normalize(processNeuralOutputMatrix(iNeuralNet))
+	var OutputMatrix = processNeuralOutputMatrix(iNeuralNet)
 	
 	var Neural_img = Image.new()
-	Neural_img.create_from_data(resolution, resolution, false, Image.FORMAT_RGB8, PoolByteArray(aOutputMatrix))
+	Neural_img.create_from_data(resolution, resolution, false, Image.FORMAT_RGB8, PoolByteArray(ImageHandler.ONEtoTWOFIFTYFIVE(OutputMatrix)))
 	Neural_img.lock()
 	Neural_img.save_png("res://Images/aaa.png")
 	

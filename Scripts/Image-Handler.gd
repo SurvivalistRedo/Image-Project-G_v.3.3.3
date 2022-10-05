@@ -26,6 +26,8 @@ func findMinMax(array):
 		else:
 			if array[n] < Min:
 				Min = array[n]
+	print("Min: ",Min)
+	print("Max: ",Max)
 	return [Min,Max]
 func normalize(data):
 	var array_buffer = []
@@ -43,8 +45,16 @@ func activation(data):
 		array_buffer.append( 255.0 * max(min(1.0/(1.0+pow(2.718,-4*(data[n]/255.0)+2.0)),1.0),0.0) )
 	return array_buffer.duplicate(true)
 
+func ONEtoTWOFIFTYFIVE(data):
+	var array_buffer = []
+	for n in range(0,data.size()):
+		array_buffer.append( data[n] * 255.0 )
+	return array_buffer.duplicate(true)
+
 func colorSum(rgb):
 	return rgb.r+rgb.g+rgb.b
+func colorDifference(rgb1,rgb2):
+	return colorSum( Color(abs(rgb1.r-rgb2.r),abs(rgb1.g-rgb2.g),abs(rgb1.b-rgb2.b)) )
 func calculateContrast(reference):
 	var sum = 0
 	var imgBuffer = Image.new()
@@ -61,7 +71,7 @@ func calculateContrast(reference):
 				if (y+j >= 0) && (y+j < reference.get_height()):
 					for i in [-1,0,1]:
 						if (x+i >= 0) && (x+i < reference.get_width()):
-							sum += abs(colorSum(imgBuffer.get_pixel(x,y))-colorSum(imgBuffer.get_pixel(x+i,y+j)))
+							sum += colorDifference(imgBuffer.get_pixel(x,y),imgBuffer.get_pixel(x+i,y+j))
 	sum = sum / ( reference.get_width() * reference.get_height() )
 	if sum > record:
 		record = sum
@@ -77,7 +87,7 @@ func calculateError(iReference, examinee):
 	var error = 0
 	for x in range(0,width):
 		for y in range(0,height):
-			error += abs( colorSum(iReference.get_pixel(x,y)) - colorSum(examinee.get_pixel(x,y)) )
+			error += colorDifference(iReference.get_pixel(x,y),examinee.get_pixel(x,y))
 	error = error/pow(resolution,2.0)
 	if error < eRecord or eRecord == 0:
 		eRecord = error
