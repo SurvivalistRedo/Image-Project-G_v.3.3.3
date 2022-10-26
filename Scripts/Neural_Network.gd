@@ -59,10 +59,10 @@ func printNAS_nPS_H():
 				print("Node",node,": ",NAS_nPS_H[i][layer][node])
 	print()
 
-func Sigmoid(x):
-	return 1 - (2/(1+pow(2.718,x)))
-func SigmoidF(x):
-	return 1 - (1/(1+pow(2.718,x)))
+func Sigmoid(x,r):
+	return 1 - (r/(1+pow(2.718,x)))
+func deSigmoid(x,r):
+	return r*pow(2.718,x) / pow((1+pow(2.718,x)),2.0)
 func f(x):
 	return (x+1.0)/2.0
 func GeLu(x):
@@ -74,7 +74,7 @@ func processNodeOutput(node,inputs):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
-	return Sigmoid(sum+node[1])
+	return Sigmoid(sum+node[1],1)
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]

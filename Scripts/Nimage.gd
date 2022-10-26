@@ -26,7 +26,7 @@ func _ready():
 	InputHandler = Input_Handler.new()
 	ImageHandler = Image_Handler.new()
 	NeuralNet = Neural_Network.new()
-	NeuralNet.initialize(2,[50,3])
+	NeuralNet.initialize(2,[100,50,10,3])
 
 func _process(_delta):
 	InputHandler.selector()
@@ -67,13 +67,13 @@ func iterate():
 	if x and Global.currentIteration < Global.Iterations:
 		if Global.currentIteration < Global.Iterations:
 			NeuralNet.NetParametersRandomStep()
-			processNeuralImage(NeuralNet,referenceError,doReverseIfWorse)
+			processNeuralImage(NeuralNet,contrast,doReverseIfWorse)
 			print(Global.currentIteration+1,"/",Global.Iterations)
 			Global.currentIteration += 1
 		else:
 			x = false
 			Global.currentIteration = 0
-			processNeuralImage(NeuralNet,referenceError,dontReverseIfWorse)
+			processNeuralImage(NeuralNet,contrast,dontReverseIfWorse)
 			print(Global.currentIteration+1,"/",Global.Iterations)
 	else:
 		if Input.is_action_just_pressed("ui_up"):
