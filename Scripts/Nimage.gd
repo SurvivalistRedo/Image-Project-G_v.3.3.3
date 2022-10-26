@@ -26,7 +26,7 @@ func _ready():
 	InputHandler = Input_Handler.new()
 	ImageHandler = Image_Handler.new()
 	NeuralNet = Neural_Network.new()
-	NeuralNet.initialize(2,[100,50,10,3])
+	NeuralNet.initialize(2,[50,25,10,3])
 
 func _process(_delta):
 	InputHandler.selector()
@@ -40,6 +40,9 @@ func _process(_delta):
 	if Input.is_action_pressed("X"):
 		x = false
 	iterate()
+	
+	if Input.is_action_just_pressed("C"):
+		clearRecords()
 	
 	if Input.is_action_pressed("ui_page_up"):
 		resolution += 10
@@ -79,6 +82,12 @@ func iterate():
 		if Input.is_action_just_pressed("ui_up"):
 			x = true
 			Global.currentIteration = 0
+
+func clearRecords():
+	print([record,eRecord])
+	record = 0
+	eRecord = 0
+	print([record,eRecord])
 
 func processNeuralOutputMatrix(iNeuralNet):
 	var NeuralOutputMatrix = []
