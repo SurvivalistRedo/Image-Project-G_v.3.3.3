@@ -32,10 +32,10 @@ func _process(_delta):
 	InputHandler.selector()
 	
 	if Input.is_action_just_pressed("ui_focus_next"):
-		processNeuralImage(NeuralNet,contrast,dontReverseIfWorse)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_just_pressed("ui_accept"):
 		resolution = 1000
-		processNeuralImage(NeuralNet,contrast,dontReverseIfWorse)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	
 	if Input.is_action_pressed("X"):
 		x = false
@@ -58,10 +58,10 @@ func _process(_delta):
 	
 	if Input.is_action_just_pressed("ui_left"):
 		NeuralNet.ReverseLastNetParametersRandomStep()
-		processNeuralImage(NeuralNet,contrast,dontReverseIfWorse)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_just_pressed("ui_right"):
 		NeuralNet.NetParametersRandomStep()
-		processNeuralImage(NeuralNet,contrast,dontReverseIfWorse)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	
 	if Input.is_action_just_pressed("P"):
 		NeuralNet.printNetwork()
@@ -70,13 +70,13 @@ func iterate():
 	if x and Global.currentIteration < Global.Iterations:
 		if Global.currentIteration < Global.Iterations:
 			NeuralNet.NetParametersRandomStep()
-			processNeuralImage(NeuralNet,contrast,doReverseIfWorse)
+			processNeuralImage(NeuralNet,Global.scoreFunction,doReverseIfWorse)
 			print(Global.currentIteration+1,"/",Global.Iterations)
 			Global.currentIteration += 1
 		else:
 			x = false
 			Global.currentIteration = 0
-			processNeuralImage(NeuralNet,contrast,dontReverseIfWorse)
+			processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 			print(Global.currentIteration+1,"/",Global.Iterations)
 	else:
 		if Input.is_action_just_pressed("ui_up"):
