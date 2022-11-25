@@ -25,8 +25,8 @@ script = ExtResource( 1 )
 window_title = "Open a File"
 mode = 0
 access = 2
-current_dir = "/Users/Redo/Desktop/Development/Grid Sampler v.3.3.3"
-current_path = "/Users/Redo/Desktop/Development/Grid Sampler v.3.3.3/"
+current_dir = "/Users/Redo/Desktop/Development/Image Project G_v.3.3.3"
+current_path = "/Users/Redo/Desktop/Development/Image Project G_v.3.3.3/"
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false

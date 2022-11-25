@@ -29,14 +29,14 @@ func selector():
 			if Input.is_action_pressed("up"):
 				Global.multRange += 0.01
 				printSetup()
-			if Input.is_action_pressed("down"):
+			if Input.is_action_pressed("down") && (Global.multRange > 0):
 				Global.multRange -= 0.01
 				printSetup()
 		2:
 			if Input.is_action_pressed("up"):
 				Global.biasRange += 0.01
 				printSetup()
-			if Input.is_action_pressed("down"):
+			if Input.is_action_pressed("down") && (Global.biasRange > 0):
 				Global.biasRange -= 0.01
 				printSetup()
 		3:
@@ -44,7 +44,7 @@ func selector():
 				Global.Iterations += 5.0
 				Global.currentIteration += 5.0
 				printSetup()
-			if Input.is_action_pressed("down"):
+			if Input.is_action_pressed("down") && (Global.Iterations > 0):
 				Global.Iterations -= 5.0
 				Global.currentIteration -= 5.0
 				printSetup()
