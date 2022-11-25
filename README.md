@@ -1,4 +1,4 @@
-# Grid-Sampler-v.3.3.3
+# Image-Project-G_v.3.3.3
 
 >Right Arrow to make a random change to the network and render image
 >
