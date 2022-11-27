@@ -7,7 +7,7 @@ var InputHandler
 var record = 0
 var eRecord = 0
 
-var resolution = 100
+var resolution = 50
 var graph_size = 5
 
 var x = false
@@ -26,7 +26,7 @@ func _ready():
 	InputHandler = Input_Handler.new()
 	ImageHandler = Image_Handler.new()
 	NeuralNet = Neural_Network.new()
-	NeuralNet.initialize(2,[50,10,10,10,3])
+	NeuralNet.initialize(2,[10,50,5,3])
 
 func _process(_delta):
 	InputHandler.selector()

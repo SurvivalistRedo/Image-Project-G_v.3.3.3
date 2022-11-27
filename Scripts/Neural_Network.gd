@@ -72,7 +72,7 @@ func f3(x):
 	return max(f2(x)-f2(PI),0)
 func f4(x):
 	return sin(x) * f3(x)
-func f5 (x):
+func f5(x):
 	return f4(0.400173*x) * (1 / f4(0.400173))
 func Sigmoid(x,r):
 	return 1 - (r/(1+pow(2.718,x)))
@@ -89,7 +89,7 @@ func processNodeOutput(node,inputs):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
-	return f5(sum+node[1])
+	return sin(sum+node[1])
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]
