@@ -9,6 +9,7 @@ var eRecord = 0
 
 var resolution = 50
 var graph_size = 5
+var graph_origin = Vector2(0,0)
 
 var x = false
 
@@ -26,12 +27,15 @@ func _ready():
 	InputHandler = Input_Handler.new()
 	ImageHandler = Image_Handler.new()
 	NeuralNet = Neural_Network.new()
-	NeuralNet.initialize(2,[10,50,5,3])
+	NeuralNet.initialize(2,[20,20,10,3])
 
 func _process(_delta):
 	InputHandler.selector()
 	
 	if Input.is_action_just_pressed("ui_focus_next"):
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+	if Input.is_action_pressed("Q"):
+		graph_origin += Vector2(1,0)
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_just_pressed("ui_accept"):
 		resolution = 1000
@@ -92,11 +96,11 @@ func clearRecords():
 func processNeuralOutputMatrix(iNeuralNet):
 	var NeuralOutputMatrix = []
 	for x in range(0,resolution):
-		iNeuralNet.inputArray[0] = (x-(resolution/2.0))*(graph_size/(resolution/2.0))
+		iNeuralNet.inputArray[0] = (x-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.x
 		if printProgress:
 			print(x+1, "/", resolution)
 		for y in range(0,resolution):
-			iNeuralNet.inputArray[1] = (y-(resolution/2.0))*(graph_size/(resolution/2.0))
+			iNeuralNet.inputArray[1] = (y-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.y
 			var outputs = iNeuralNet.processOutputs()
 			for i in range(0,outputs.size()):
 				NeuralOutputMatrix.append(outputs[i])
