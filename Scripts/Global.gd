@@ -1,8 +1,8 @@
 extends Node
 
-var multRange = 1
-var biasRange = 1
+var multRange = 0
+var biasRange = 0
 
 var scoreFunction = 0
-var Iterations = 250
-var currentIteration = 250
+var Iterations = 1000
+var currentIteration = 1000

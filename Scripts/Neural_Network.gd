@@ -74,7 +74,7 @@ func processNodeOutput(node,inputs):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
-	return Sigmoid(sum+node[1],1)
+	return sin(sum+node[1])
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]
@@ -151,6 +151,8 @@ func NetParametersRandomStep():
 			
 			networkArray[l][n][0] = pairArrayAdd(networkArray[l][n][0],nMASB.duplicate(true))
 			networkArray[l][n][1] = networkArray[l][n][1] + nBSB
+func signFlipNetParametersStep():
+	pass
 func ReverseLastNetParametersRandomStep():
 	if NAS_nPS_H.size()-1 < 0:
 		push_error("NAS_nPS_H.size()-1 < 0")
