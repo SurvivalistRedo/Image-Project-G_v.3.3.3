@@ -89,7 +89,7 @@ func processNodeOutput(node,inputs):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
-	return GeLu(sum+node[1])
+	return sin(sum+node[1])
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]
