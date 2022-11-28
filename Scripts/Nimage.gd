@@ -96,11 +96,13 @@ func clearRecords():
 func processNeuralOutputMatrix(iNeuralNet):
 	var NeuralOutputMatrix = []
 	for x in range(0,resolution):
-		iNeuralNet.inputArray[0] = (x-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.x
+		var x_pos = (x-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.x
+		iNeuralNet.inputArray[0] = x_pos
 		if printProgress:
 			print(x+1, "/", resolution)
 		for y in range(0,resolution):
-			iNeuralNet.inputArray[1] = (y-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.y
+			var y_pos = (y-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.y
+			iNeuralNet.inputArray[1] = y_pos
 			var outputs = iNeuralNet.processOutputs()
 			for i in range(0,outputs.size()):
 				NeuralOutputMatrix.append(outputs[i])

@@ -32,7 +32,7 @@ func initialize(inputArraySize,iNodesPerLayer):
 			var multiplier_array_buffer = []
 			var bias_float_buffer = 0
 			for c in range(0,PLNQ):
-				multiplier_array_buffer.append(rand_range(-Global.multRange,Global.multRange))
+				multiplier_array_buffer.append(rand_range(-Global.multRange/sqrt(node+1.0),Global.multRange/sqrt(node+1.0)))
 				bias_float_buffer = rand_range(-Global.biasRange,Global.biasRange)
 			networkArray[layer].append([multiplier_array_buffer,bias_float_buffer])
 	printNetwork()
@@ -89,7 +89,7 @@ func processNodeOutput(node,inputs):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
-	return sin(sum+node[1])
+	return GeLu(sum+node[1])
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]
@@ -138,10 +138,10 @@ func generateRandomStepArray(currentLayer,i_array_buffer,i_range):
 	i_array_buffer = []
 	if currentLayer == 0:
 		for i in range(0,inputArray.size()):
-			i_array_buffer.append(rand_range(-i_range,i_range))
+			i_array_buffer.append(rand_range(-i_range/sqrt(i+1.0),i_range/sqrt(i+1.0)))
 	else:
 		for i in range(0,nodesPerLayer[currentLayer-1]):
-			i_array_buffer.append(rand_range(-i_range,i_range))
+			i_array_buffer.append(rand_range(-i_range/sqrt(i+1.0),i_range/sqrt(i+1.0)))
 	return i_array_buffer.duplicate(true)
 
 func NetParametersRandomStep():
