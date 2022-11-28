@@ -26,36 +26,36 @@ func selector():
 	
 	match(s):
 		1:
-			if Input.is_action_pressed("up"):
+			if Input.is_action_pressed("Kp-Up"):
 				Global.multRange += 0.01
 				printSetup()
-			if Input.is_action_pressed("down") && (Global.multRange > 0):
+			if Input.is_action_pressed("Kp-Down") && (Global.multRange > 0):
 				Global.multRange -= 0.01
 				printSetup()
 		2:
-			if Input.is_action_pressed("up"):
+			if Input.is_action_pressed("Kp-Up"):
 				Global.biasRange += 0.01
 				printSetup()
-			if Input.is_action_pressed("down") && (Global.biasRange > 0):
+			if Input.is_action_pressed("Kp-Down") && (Global.biasRange > 0):
 				Global.biasRange -= 0.01
 				printSetup()
 		3:
-			if Input.is_action_pressed("up"):
+			if Input.is_action_pressed("Kp-Up"):
 				Global.Iterations += 5.0
 				Global.currentIteration += 5.0
 				printSetup()
-			if Input.is_action_pressed("down") && (Global.Iterations > 0):
+			if Input.is_action_pressed("Kp-Down") && (Global.Iterations > 0):
 				Global.Iterations -= 5.0
 				Global.currentIteration -= 5.0
 				printSetup()
 		4:
-			if Input.is_action_just_pressed("up"):
+			if Input.is_action_just_pressed("Kp-Up"):
 				if Global.scoreFunction < 1:
 					Global.scoreFunction += 1
 					printSetup()
 				else:
 					printSetup()
-			if Input.is_action_just_pressed("down"):
+			if Input.is_action_just_pressed("Kp-Down"):
 				if Global.scoreFunction > 0:
 					Global.scoreFunction -= 1
 					printSetup()

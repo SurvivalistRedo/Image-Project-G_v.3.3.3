@@ -32,10 +32,20 @@ func _ready():
 func _process(_delta):
 	InputHandler.selector()
 	
-	if Input.is_action_just_pressed("ui_focus_next"):
+	if Input.is_action_pressed("ui_up"):
+		graph_origin += Vector2(0,1)
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-	if Input.is_action_pressed("Q"):
+	if Input.is_action_pressed("ui_down"):
+		graph_origin += Vector2(0,-1)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+	if Input.is_action_pressed("ui_left"):
+		graph_origin += Vector2(-1,0)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+	if Input.is_action_pressed("ui_right"):
 		graph_origin += Vector2(1,0)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+	
+	if Input.is_action_just_pressed("ui_focus_next"):
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_just_pressed("ui_accept"):
 		resolution = 1000
@@ -60,10 +70,10 @@ func _process(_delta):
 	if Input.is_action_just_pressed("ui_end"):
 		printProgress = false
 	
-	if Input.is_action_just_pressed("ui_left"):
+	if Input.is_action_just_pressed("Kp-Left"):
 		NeuralNet.ReverseLastNetParametersRandomStep()
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-	if Input.is_action_just_pressed("ui_right"):
+	if Input.is_action_just_pressed("Kp-Right"):
 		NeuralNet.NetParametersRandomStep()
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	
@@ -83,7 +93,7 @@ func iterate():
 			processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 			print(Global.currentIteration+1,"/",Global.Iterations)
 	else:
-		if Input.is_action_just_pressed("ui_up"):
+		if Input.is_action_just_pressed("Kp-Add"):
 			x = true
 			Global.currentIteration = 0
 
@@ -105,7 +115,10 @@ func processNeuralOutputMatrix(iNeuralNet):
 			iNeuralNet.inputArray[1] = y_pos
 			var outputs = iNeuralNet.processOutputs()
 			for i in range(0,outputs.size()):
-				NeuralOutputMatrix.append(outputs[i])
+				if x % 2 == 0:
+					NeuralOutputMatrix.append(outputs[i])
+				else:
+					NeuralOutputMatrix.append(0.0)
 	return NeuralOutputMatrix.duplicate(true)
 
 func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
