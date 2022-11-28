@@ -32,17 +32,24 @@ func _ready():
 func _process(_delta):
 	InputHandler.selector()
 	
-	if Input.is_action_pressed("ui_up"):
-		graph_origin += Vector2(0,1)
-		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_pressed("ui_down"):
 		graph_origin += Vector2(0,-1)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+	if Input.is_action_pressed("ui_up"):
+		graph_origin += Vector2(0,1)
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_pressed("ui_left"):
 		graph_origin += Vector2(-1,0)
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_pressed("ui_right"):
 		graph_origin += Vector2(1,0)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+	
+	if Input.is_action_pressed("-"):
+		graph_size -= 1
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+	if Input.is_action_pressed("+"):
+		graph_size += 1
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	
 	if Input.is_action_just_pressed("ui_focus_next"):
