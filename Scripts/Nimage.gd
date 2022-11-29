@@ -112,20 +112,17 @@ func clearRecords():
 
 func processNeuralOutputMatrix(iNeuralNet):
 	var NeuralOutputMatrix = []
-	for x in range(0,resolution):
-		var x_pos = (x-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.x
-		iNeuralNet.inputArray[0] = x_pos
+	for y in range(0,resolution):
+		var y_pos = (y-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.y
+		iNeuralNet.inputArray[0] = y_pos
 		if printProgress:
-			print(x+1, "/", resolution)
-		for y in range(0,resolution):
-			var y_pos = (y-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.y
-			iNeuralNet.inputArray[1] = y_pos
+			print(y+1, "/", resolution)
+		for x in range(0,resolution):
+			var x_pos = (x-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.x
+			iNeuralNet.inputArray[1] = x_pos
 			var outputs = iNeuralNet.processOutputs()
 			for i in range(0,outputs.size()):
-				if x % 2 == 0:
-					NeuralOutputMatrix.append(outputs[i])
-				else:
-					NeuralOutputMatrix.append(0.0)
+				NeuralOutputMatrix.append(outputs[i])
 	return NeuralOutputMatrix.duplicate(true)
 
 func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
