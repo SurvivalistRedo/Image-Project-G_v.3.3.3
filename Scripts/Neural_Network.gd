@@ -111,8 +111,12 @@ func processOutputs():
 				currentLayerOutputs.append(processNodeOutput(networkArray[layer][node].duplicate(true),previousLayerOutputs.duplicate(true)))
 			previousLayerOutputs = currentLayerOutputs.duplicate(true)
 	
-	var color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
-	return [color_buffer.r,color_buffer.g,color_buffer.b]
+	if false:
+		var color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+		return [color_buffer.r,color_buffer.g,color_buffer.b]
+	else:
+		var color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+		return [color_buffer.r,color_buffer.g,color_buffer.b]
 func pairArraySubtract(array1,array2):
 	var array_buffer = []
 	if array1.size() != array2.size():

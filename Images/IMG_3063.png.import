@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Radiation_warning_symbol.png-97de19ed5eb7b631d1a898d7fa489f54.stex"
+path="res://.import/IMG_3063.png-89349fb92c7c8a5dc0aea636081cf8a9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Images/Radiation_warning_symbol.png"
-dest_files=[ "res://.import/Radiation_warning_symbol.png-97de19ed5eb7b631d1a898d7fa489f54.stex" ]
+source_file="res://Images/IMG_3063.png"
+dest_files=[ "res://.import/IMG_3063.png-89349fb92c7c8a5dc0aea636081cf8a9.stex" ]
 
 [params]
 
