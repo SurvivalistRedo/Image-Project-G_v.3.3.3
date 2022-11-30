@@ -66,10 +66,18 @@ func _process(_delta):
 		clearRecords()
 	
 	if Input.is_action_pressed("ui_page_up"):
-		resolution += 10
+		if resolution < 10:
+			resolution = 10
+		else:
+			resolution += 10
 		print("Resolution = ",resolution)
 	if Input.is_action_pressed("ui_page_down"):
-		resolution -= 10
+		if resolution == 1:
+			pass
+		if resolution <= 10:
+			resolution = 1
+		else:
+			resolution -= 10
 		print("Resolution = ",resolution)
 	
 	if Input.is_action_just_pressed("ui_home"):

@@ -89,7 +89,7 @@ func processNodeOutput(node,inputs):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
-	return sin(sum+node[1])
+	return f5(sum+node[1])
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]
@@ -111,7 +111,7 @@ func processOutputs():
 				currentLayerOutputs.append(processNodeOutput(networkArray[layer][node].duplicate(true),previousLayerOutputs.duplicate(true)))
 			previousLayerOutputs = currentLayerOutputs.duplicate(true)
 	
-	if false:
+	if true:
 		var color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
 		return [color_buffer.r,color_buffer.g,color_buffer.b]
 	else:
