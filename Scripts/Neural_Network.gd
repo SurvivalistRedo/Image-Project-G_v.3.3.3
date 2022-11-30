@@ -12,6 +12,8 @@ var NAS_nBS = []  # Network Array Step of node Bias Steps
 var nMASB = []    # node Multiplier Array Step Buffer
 var nBSB = 0.0    # node Bias Step Buffer
 
+enum {Sigmoid,GeLu,ReLu}
+
 func initialize(inputArraySize,iNodesPerLayer):
 	# Creates Network
 	nodesPerLayer = iNodesPerLayer
@@ -85,11 +87,20 @@ func GeLu(x):
 func ReLu(x):
 	return max(0.0,x)
 
-func processNodeOutput(node,inputs):
+func processNodeOutput(node,inputs,activation_function = -1):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
-	return f5(sum+node[1])
+	var weighted_output = sum + node[1]
+	match(activation_function):
+		0:
+			return Sigmoid(weighted_output,2.0)
+		1:
+			return GeLu(weighted_output)
+		2:
+			return ReLu(weighted_output)
+		_:
+			return sin(weighted_output)
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]
