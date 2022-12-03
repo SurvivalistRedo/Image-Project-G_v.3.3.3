@@ -71,6 +71,12 @@ func _process(_delta):
 		iterating = false
 	iterate()
 	
+	if Input.is_action_just_pressed("S"):
+		if printProgress:
+			printSumRecord = false
+		else:
+			printSumRecord = true
+	
 	if Input.is_action_just_pressed("C"):
 		clearRecords()
 	
