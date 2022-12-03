@@ -6,12 +6,13 @@ var InputHandler
 
 var record = 0
 var eRecord = 0
+var printSumRecord = false
 
-var resolution = 50
+var resolution = 30
 var graph_size = 5
 var graph_origin = Vector2(0,0)
 
-var x = false
+var iterating = false
 
 var printProgress = true
 
@@ -27,6 +28,8 @@ func _ready():
 	InputHandler = Input_Handler.new()
 	ImageHandler = Image_Handler.new()
 	NeuralNet = Neural_Network.new()
+	NeuralNet.servingNimage = true
+	NeuralNet.activation_function = 3 # sin
 	NeuralNet.initialize(2,[20,20,10,3])
 
 func _process(_delta):
@@ -35,22 +38,28 @@ func _process(_delta):
 	if Input.is_action_pressed("ui_down"):
 		graph_origin += Vector2(0,-1)
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
 	if Input.is_action_pressed("ui_up"):
 		graph_origin += Vector2(0,1)
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
 	if Input.is_action_pressed("ui_left"):
 		graph_origin += Vector2(-1,0)
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
 	if Input.is_action_pressed("ui_right"):
 		graph_origin += Vector2(1,0)
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
 	
 	if Input.is_action_pressed("-"):
 		graph_size -= 1
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
 	if Input.is_action_pressed("+"):
 		graph_size += 1
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
 	
 	if Input.is_action_just_pressed("ui_focus_next"):
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
@@ -59,7 +68,7 @@ func _process(_delta):
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	
 	if Input.is_action_pressed("X"):
-		x = false
+		iterating = false
 	iterate()
 	
 	if Input.is_action_just_pressed("C"):
@@ -95,21 +104,24 @@ func _process(_delta):
 	if Input.is_action_just_pressed("P"):
 		NeuralNet.printNetwork()
 
+func printViewportInfo():
+	print("(",graph_origin.x,",",graph_origin.y,")","(±",graph_size,",±",graph_size,")")
+
 func iterate():
-	if x and Global.currentIteration < Global.Iterations:
+	if iterating and Global.currentIteration < Global.Iterations:
 		if Global.currentIteration < Global.Iterations:
 			NeuralNet.NetParametersRandomStep()
 			processNeuralImage(NeuralNet,Global.scoreFunction,doReverseIfWorse)
 			print(Global.currentIteration+1,"/",Global.Iterations)
 			Global.currentIteration += 1
 		else:
-			x = false
+			iterating = false
 			Global.currentIteration = 0
 			processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 			print(Global.currentIteration+1,"/",Global.Iterations)
 	else:
 		if Input.is_action_just_pressed("Kp-Add"):
-			x = true
+			iterating = true
 			Global.currentIteration = 0
 
 func clearRecords():
@@ -121,13 +133,13 @@ func clearRecords():
 func processNeuralOutputMatrix(iNeuralNet):
 	var NeuralOutputMatrix = []
 	for y in range(0,resolution):
-		var y_pos = (y-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.y
-		iNeuralNet.inputArray[0] = y_pos
+		var y_pos = -(y-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.y
+		iNeuralNet.inputArray[1] = y_pos
 		if printProgress:
 			print(y+1, "/", resolution)
 		for x in range(0,resolution):
 			var x_pos = (x-(resolution/2.0))*(graph_size/(resolution/2.0)) + graph_origin.x
-			iNeuralNet.inputArray[1] = x_pos
+			iNeuralNet.inputArray[0] = x_pos
 			var outputs = iNeuralNet.processOutputs()
 			for i in range(0,outputs.size()):
 				NeuralOutputMatrix.append(outputs[i])
@@ -158,7 +170,8 @@ func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
 		sum_record = ImageHandler.calculateError(referenceImage,Neural_img)
 		eRecord = sum_record[1]
 	
-	print(sum_record)
+	if printSumRecord:
+		print(sum_record)
 	
 	if reverseEnum == 0:
 		pass

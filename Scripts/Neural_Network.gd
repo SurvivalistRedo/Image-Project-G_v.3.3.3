@@ -2,6 +2,8 @@ extends Node
 
 class_name Neural_Network
 
+var servingNimage = false
+
 var nodesPerLayer = [] # Amount of Nodes per each layer, with quantity of layers being assumed from nodesPerLayer.size()
 var networkArray = []  # Array of Network
 var inputArray = []    # Array of Nets Inputs
@@ -12,7 +14,10 @@ var NAS_nBS = []  # Network Array Step of node Bias Steps
 var nMASB = []    # node Multiplier Array Step Buffer
 var nBSB = 0.0    # node Bias Step Buffer
 
-enum {Sigmoid,GeLu,ReLu}
+const e = 2.718
+
+var activation_function = -1
+enum {Sigmoid,GeLu,ReLu,Sin}
 
 func initialize(inputArraySize,iNodesPerLayer):
 	# Creates Network
@@ -77,17 +82,26 @@ func f4(x):
 func f5(x):
 	return f4(0.400173*x) * (1 / f4(0.400173))
 func Sigmoid(x,r):
-	return 1 - (r/(1+pow(2.718,x)))
+	return 1 - (r/(1+pow(e,x)))
 func deSigmoid(x,r):
-	return r*pow(2.718,x) / pow((1+pow(2.718,x)),2.0)
+	return r*pow(e,x) / pow((1+pow(e,x)),2.0)
 func f(x):
 	return (x+1.0)/2.0
-func GeLu(x):
-	return (x)/(1.0+(pow(2.718,(-1.702*x))))
+func GeLu(x,a = -1):
+	return (x)/(1.0+(pow(e,(a*x))))
+func deGeLu(x,a = -1):
+	var numerator = (a * x * pow(e,a*x)) - (1) - (pow(e,a*x))
+	var denominator = pow(1 + pow(e,a*x),2)
+	return -1 * (numerator/denominator)
 func ReLu(x):
 	return max(0.0,x)
+func deReLu(x):
+	if x >= 0:
+		return 1
+	else:
+		return 0
 
-func processNodeOutput(node,inputs,activation_function = -1):
+func processNodeOutput(node,inputs):
 	var sum = 0
 	for pn in range(0,inputs.size()):
 		sum += inputs[pn] * node[0][pn]
@@ -99,8 +113,10 @@ func processNodeOutput(node,inputs,activation_function = -1):
 			return GeLu(weighted_output)
 		2:
 			return ReLu(weighted_output)
-		_:
+		3:
 			return sin(weighted_output)
+		_:
+			return weighted_output
 func processOutputs():
 	# f(x) = x * node[multiplier]
 	# g(i) = sum of f(previousLayersOutputs[i]) + node[bias]
@@ -109,6 +125,7 @@ func processOutputs():
 	# return final layers outputs
 	var previousLayerOutputs = []
 	var currentLayerOutputs = []
+	var layerOutputs = []
 	for layer in range(0,nodesPerLayer.size(),1):
 		currentLayerOutputs = []
 		if layer == 0:
@@ -121,13 +138,17 @@ func processOutputs():
 			for node in range(0,nodesPerLayer[layer]):
 				currentLayerOutputs.append(processNodeOutput(networkArray[layer][node].duplicate(true),previousLayerOutputs.duplicate(true)))
 			previousLayerOutputs = currentLayerOutputs.duplicate(true)
+		layerOutputs.append(currentLayerOutputs.duplicate(true))
 	
-	if true:
-		var color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
-		return [color_buffer.r,color_buffer.g,color_buffer.b]
+	if servingNimage:
+		if true:
+			var color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+			return [color_buffer.r,color_buffer.g,color_buffer.b]
+		else:
+			var color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+			return [color_buffer.r,color_buffer.g,color_buffer.b]
 	else:
-		var color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
-		return [color_buffer.r,color_buffer.g,color_buffer.b]
+		return layerOutputs
 func pairArraySubtract(array1,array2):
 	var array_buffer = []
 	if array1.size() != array2.size():
@@ -194,3 +215,30 @@ func ReverseLastNetParametersRandomStep():
 			networkArray[l][n][0] = pairArraySubtract(networkArray[l][n][0],nMASB)
 			networkArray[l][n][1] = networkArray[l][n][1] - nBSB
 	NAS_nPS_H.remove(NAS_nPS_H.size()-1)
+
+func gradientDescentSingleLayer(layer,targetOutput):
+	var outputs = processOutputs()
+	var a
+	var b
+	match(activation_function):
+		0:
+			a = deSigmoid(1,2.0)
+		1:
+			a = deGeLu(1)
+		2:
+			a = deReLu(1)
+		_:
+			a = cos(1)
+
+
+
+
+
+
+
+
+
+
+
+
+

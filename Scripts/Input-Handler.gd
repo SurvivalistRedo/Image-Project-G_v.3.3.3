@@ -41,12 +41,12 @@ func selector():
 				printSetup()
 		3:
 			if Input.is_action_pressed("Kp-Up"):
-				Global.Iterations += 5.0
-				Global.currentIteration += 5.0
+				Global.Iterations += 10.0
+				Global.currentIteration += 10.0
 				printSetup()
 			if Input.is_action_pressed("Kp-Down") && (Global.Iterations > 0):
-				Global.Iterations -= 5.0
-				Global.currentIteration -= 5.0
+				Global.Iterations -= 10.0
+				Global.currentIteration -= 10.0
 				printSetup()
 		4:
 			if Input.is_action_just_pressed("Kp-Up"):

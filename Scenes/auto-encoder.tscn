@@ -4,3 +4,28 @@
 
 [node name="auto-encoder" type="Node2D"]
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [  ],
+"_edit_vertical_guides_": [  ]
+}
+
+[node name="ae1" type="ColorRect" parent="."]
+margin_right = 1000.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ae2" type="ColorRect" parent="."]
+margin_right = 1000.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ae3" type="ColorRect" parent="."]
+margin_right = 1000.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
