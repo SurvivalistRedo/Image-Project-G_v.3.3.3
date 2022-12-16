@@ -8,7 +8,7 @@ var record = 0
 var eRecord = 0
 var printSumRecord = true
 
-var resolution = 30
+var resolution = 10
 var graph_size = 5
 var graph_origin = Vector2(0,0)
 
@@ -22,6 +22,8 @@ enum {returnImage,returnTexture}
 
 var referencePath = "no input"
 
+var parameterStepQueue = []
+
 func _ready():
 	get_tree().get_root().set_transparent_background(true)
 	randomize()
@@ -30,7 +32,7 @@ func _ready():
 	NeuralNet = Neural_Network.new()
 	NeuralNet.servingNimage = true
 	NeuralNet.activation_function = 3 # 3 = sin
-	NeuralNet.initialize(2,[50,40,30,20,10,3])
+	NeuralNet.initialize(2,[100,50,10,3])
 
 func _process(_delta):
 	InputHandler.selector()
@@ -116,10 +118,35 @@ func graphInput():
 func iterate():
 	if iterating and Global.currentIteration < Global.Iterations:
 		if Global.currentIteration < Global.Iterations:
-			NeuralNet.NetParametersRandomStep()
-			processNeuralImage(NeuralNet,Global.scoreFunction,doReverseIfWorse)
-			print(Global.currentIteration+1,"/",Global.Iterations)
-			Global.currentIteration += 1
+			if parameterStepQueue == []:
+				parameterStepQueue.append(NeuralNet.NetParametersRandomStep().duplicate(true))
+				
+				if parameterStepQueue.size() == 1:
+					parameterStepQueue[0] = NeuralNet.multiplyArray(parameterStepQueue[0],-1.0).duplicate(true)
+				elif parameterStepQueue.size() > 1:
+					parameterStepQueue[-1] = NeuralNet.multiplyArray(parameterStepQueue[-1],-1.0).duplicate(true)
+				else:
+					push_error("wahhh")
+					get_tree().quit()
+				
+				if processNeuralImage(NeuralNet,Global.scoreFunction,doReverseIfWorse):
+					pass
+				else:
+					if parameterStepQueue.size() == 1:
+						parameterStepQueue.remove(0)
+					elif parameterStepQueue.size() > 1:
+						parameterStepQueue.remove(-1)
+					else:
+						push_error("wahhh")
+						get_tree().quit()
+				print(Global.currentIteration+1,"/",Global.Iterations)
+				Global.currentIteration += 1
+			elif parameterStepQueue != []:
+				NeuralNet.NetAddParameterStep(parameterStepQueue[0],1.0,true)
+				parameterStepQueue.remove(0)
+				processNeuralImage(NeuralNet,Global.scoreFunction,doReverseIfWorse)
+				print(Global.currentIteration+1,"/",Global.Iterations)
+				Global.currentIteration += 1
 		else:
 			iterating = false
 			Global.currentIteration = 0
@@ -182,16 +209,20 @@ func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
 	if printSumRecord:
 		print(sum_record)
 	
+	var isWorse
 	if reverseEnum == 0:
 		pass
 	if reverseEnum == 1:
 		if sum_record[0] == sum_record[1]:
-			pass
+			isWorse = false
 		else:
 			iNeuralNet.ReverseLastNetParametersRandomStep()
+			isWorse = true
 	
 	Neural_img.unlock()
 	var txt = ImageTexture.new()
 	Neural_img.resize(1000,1000,Image.INTERPOLATE_NEAREST)
 	txt.create_from_image(Neural_img)
 	texture = txt
+	
+	return isWorse

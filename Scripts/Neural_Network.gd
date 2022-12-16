@@ -142,7 +142,7 @@ func processOutputs(layerToInsert = 0):
 		layerOutputs.append(currentLayerOutputs.duplicate(true))
 	
 	if servingNimage:
-		if false:
+		if true:
 			var color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
 			return [color_buffer.r,color_buffer.g,color_buffer.b]
 		else:
@@ -234,6 +234,7 @@ func generateRandomStepArray(currentLayer,i_array_buffer,i_range):
 	return i_array_buffer.duplicate(true)
 
 func NetParametersRandomStep():
+	var prevNetworkArray = networkArray.duplicate(true)
 	NAS_nPS_H.append([])
 	NAS_nMAS = [] # Network Array Step of node Multiplier Array Steps
 	NAS_nBS = [] # Network Array Step of node Bias Steps
@@ -255,6 +256,7 @@ func NetParametersRandomStep():
 			
 			networkArray[l][n][0] = pairArrayAdd(networkArray[l][n][0],nMASB.duplicate(true))
 			networkArray[l][n][1] = networkArray[l][n][1] + nBSB
+	return pairArraySubtract(networkArray,prevNetworkArray)
 func NetAddParameterStep(parameterStep,i_steps = 1,record = false):
 	if record:
 		NAS_nPS_H.append(parameterStep.duplicate(true))
