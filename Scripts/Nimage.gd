@@ -6,7 +6,7 @@ var InputHandler
 
 var record = 0
 var eRecord = 0
-var printSumRecord = false
+var printSumRecord = true
 
 var resolution = 30
 var graph_size = 5
@@ -29,8 +29,8 @@ func _ready():
 	ImageHandler = Image_Handler.new()
 	NeuralNet = Neural_Network.new()
 	NeuralNet.servingNimage = true
-	NeuralNet.activation_function = 3 # sin
-	NeuralNet.initialize(2,[20,20,10,3])
+	NeuralNet.activation_function = 3 # 3 = sin
+	NeuralNet.initialize(2,[50,40,30,20,10,3])
 
 func _process(_delta):
 	InputHandler.selector()
@@ -72,7 +72,7 @@ func _process(_delta):
 	iterate()
 	
 	if Input.is_action_just_pressed("S"):
-		if printProgress:
+		if printSumRecord:
 			printSumRecord = false
 		else:
 			printSumRecord = true

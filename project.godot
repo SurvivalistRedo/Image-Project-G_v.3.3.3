@@ -19,21 +19,33 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/Input-Handler.gd"
 }, {
+"base": "Resource",
+"class": "MLP_file",
+"language": "GDScript",
+"path": "res://Scripts/MLP_file_script.gd"
+}, {
 "base": "Node",
 "class": "Neural_Network",
 "language": "GDScript",
 "path": "res://Scripts/Neural_Network.gd"
+}, {
+"base": "Node",
+"class": "varSweep",
+"language": "GDScript",
+"path": "res://Scripts/3dSweep.gd"
 } ]
 _global_script_class_icons={
 "Image_Handler": "",
 "Input_Handler": "",
-"Neural_Network": ""
+"MLP_file": "",
+"Neural_Network": "",
+"varSweep": ""
 }
 
 [application]
 
 config/name="Image Project G_v.3.3.3"
-run/main_scene="res://Scenes/world.tscn"
+run/main_scene="res://Scenes/auto-encoder.tscn"
 
 [autoload]
 
@@ -131,6 +143,16 @@ Kp-Add={
 S={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
+ ]
+}
+E={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":69,"unicode":0,"echo":false,"script":null)
+ ]
+}
+R={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":82,"unicode":0,"echo":false,"script":null)
  ]
 }
 
