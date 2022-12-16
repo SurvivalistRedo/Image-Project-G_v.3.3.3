@@ -35,31 +35,7 @@ func _ready():
 func _process(_delta):
 	InputHandler.selector()
 	
-	if Input.is_action_pressed("ui_down"):
-		graph_origin += Vector2(0,-1)
-		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-		printViewportInfo()
-	if Input.is_action_pressed("ui_up"):
-		graph_origin += Vector2(0,1)
-		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-		printViewportInfo()
-	if Input.is_action_pressed("ui_left"):
-		graph_origin += Vector2(-1,0)
-		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-		printViewportInfo()
-	if Input.is_action_pressed("ui_right"):
-		graph_origin += Vector2(1,0)
-		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-		printViewportInfo()
-	
-	if Input.is_action_pressed("-"):
-		graph_size -= 1
-		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-		printViewportInfo()
-	if Input.is_action_pressed("+"):
-		graph_size += 1
-		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-		printViewportInfo()
+	graphInput()
 	
 	if Input.is_action_just_pressed("ui_focus_next"):
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
@@ -110,8 +86,32 @@ func _process(_delta):
 	if Input.is_action_just_pressed("P"):
 		NeuralNet.printNetwork()
 
-func printViewportInfo():
-	print("(",graph_origin.x,",",graph_origin.y,")","(±",graph_size,",±",graph_size,")")
+func graphInput():
+	if Input.is_action_pressed("ui_down"):
+		graph_origin += Vector2(0,-1)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
+	if Input.is_action_pressed("ui_up"):
+		graph_origin += Vector2(0,1)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
+	if Input.is_action_pressed("ui_left"):
+		graph_origin += Vector2(-1,0)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
+	if Input.is_action_pressed("ui_right"):
+		graph_origin += Vector2(1,0)
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
+	
+	if Input.is_action_pressed("-"):
+		graph_size -= 1
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
+	if Input.is_action_pressed("+"):
+		graph_size += 1
+		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		printViewportInfo()
 
 func iterate():
 	if iterating and Global.currentIteration < Global.Iterations:
@@ -135,6 +135,9 @@ func clearRecords():
 	record = 0
 	eRecord = 0
 	print([record,eRecord])
+
+func printViewportInfo():
+	print("(",graph_origin.x,",",graph_origin.y,")","(±",graph_size,",±",graph_size,")")
 
 func processNeuralOutputMatrix(iNeuralNet):
 	var NeuralOutputMatrix = []
