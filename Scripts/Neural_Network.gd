@@ -275,6 +275,9 @@ func ReverseLastNetParametersRandomStep():
 			networkArray[l][n][1] = networkArray[l][n][1] - nBSB
 	NAS_nPS_H.remove(NAS_nPS_H.size()-1)
 
+func signFlipNetworkArray():
+	networkArray = multiplyArray(networkArray,-1.0).duplicate(true)
+
 func gradientDescentSingleLayer(layer,targetOutput,learningRate):
 	var outputs = processOutputs()
 	
