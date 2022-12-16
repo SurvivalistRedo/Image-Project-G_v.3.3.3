@@ -198,10 +198,16 @@ func pairArrayAdd(array1,array2):
 				push_error("bruh idk bug in Neural_Network.pairArrayAdd()")
 				get_tree().quit()
 		return array_buffer.duplicate(true)
-func divideArrayByInteger(array,integer):
-	var array_buffer = array.duplicate(true)
-	for i in array_buffer.size():
-		array_buffer[i] = array_buffer[i] / integer
+func divideArray(array,denominator):
+	var array_buffer = []
+	for n in array.size():
+		if typeof(array[n]) == TYPE_ARRAY:
+			array_buffer.append(divideArray(array[n],denominator).duplicate(true))
+		elif typeof(array[n]) != TYPE_ARRAY:
+			array_buffer.append( array[n] / denominator )
+		else:
+			push_error("bruh idk bug in Neural_Network.divideArray()")
+			get_tree().quit()
 	return array_buffer.duplicate(true)
 
 func generateRandomStepArray(currentLayer,i_array_buffer,i_range):
@@ -243,7 +249,7 @@ func NetAddParameterStep(parameterStep,i_steps = 1,record = false):
 		NAS_nPS_H.append(parameterStep.duplicate(true))
 	for l in range(0,nodesPerLayer.size()): # for layer in range(0, layerAmount)
 		for n in range(0,nodesPerLayer[l]): # for node in range(0, nodeAmount)
-			var averagedGradientStep = divideArrayByInteger(parameterStep[l][n][0].duplicate(true),i_steps)
+			var averagedGradientStep = divideArray(parameterStep[l][n][0].duplicate(true),i_steps)
 			networkArray[l][n][0] = pairArrayAdd(networkArray[l][n][0],averagedGradientStep.duplicate(true))
 			networkArray[l][n][1] = networkArray[l][n][1] + (parameterStep[l][n][1]/i_steps)
 func signFlipNetParametersStep():
