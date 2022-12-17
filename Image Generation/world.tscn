@@ -1,17 +1,17 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Image Generation/Nimage.gd" type="Script" id=1]
-[ext_resource path="res://Image Generation/world.gd" type="Script" id=2]
-[ext_resource path="res://Image Generation/FileDialog.gd" type="Script" id=3]
-[ext_resource path="res://Image Generation/ColorRect.gd" type="Script" id=4]
+[ext_resource path="res://Image Generation/FileDialog.gd" type="Script" id=2]
+[ext_resource path="res://Image Generation/ColorRect.gd" type="Script" id=3]
+[ext_resource path="res://Image Generation/world.gd" type="Script" id=4]
 
 [node name="world" type="Node2D"]
-script = ExtResource( 2 )
+script = ExtResource( 4 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_right = 1000.0
 margin_bottom = 1000.0
-script = ExtResource( 4 )
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -26,7 +26,7 @@ mode = 0
 access = 2
 current_dir = "/Users/Redo/Desktop/Development/Image Project G_v.3.3.3"
 current_path = "/Users/Redo/Desktop/Development/Image Project G_v.3.3.3/"
-script = ExtResource( 3 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

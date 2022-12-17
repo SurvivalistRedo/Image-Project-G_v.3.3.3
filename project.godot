@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Image Project G_v.3.3.3"
-run/main_scene="res://Image Generation/world.tscn"
+run/main_scene="res://menu.tscn"
 
 [autoload]
 
