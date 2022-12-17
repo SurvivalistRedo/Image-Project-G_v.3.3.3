@@ -12,12 +12,12 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Image_Handler",
 "language": "GDScript",
-"path": "res://Scripts/Image-Handler.gd"
+"path": "res://Image Generation/Image-Handler.gd"
 }, {
 "base": "Node",
 "class": "Input_Handler",
 "language": "GDScript",
-"path": "res://Scripts/Input-Handler.gd"
+"path": "res://Image Generation/Input-Handler.gd"
 }, {
 "base": "Resource",
 "class": "MLP_file",
@@ -32,7 +32,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "varSweep",
 "language": "GDScript",
-"path": "res://Scripts/3dSweep.gd"
+"path": "res://Auto Encoding/3dSweep.gd"
 } ]
 _global_script_class_icons={
 "Image_Handler": "",
@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Image Project G_v.3.3.3"
-run/main_scene="res://Scenes/world.tscn"
+run/main_scene="res://Image Generation/world.tscn"
 
 [autoload]
 

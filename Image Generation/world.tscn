@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Scripts/Nimage.gd" type="Script" id=1]
-[ext_resource path="res://Scripts/world.gd" type="Script" id=2]
-[ext_resource path="res://Scripts/FileDialog.gd" type="Script" id=3]
-[ext_resource path="res://Scripts/ColorRect.gd" type="Script" id=4]
+[ext_resource path="res://Image Generation/Nimage.gd" type="Script" id=1]
+[ext_resource path="res://Image Generation/world.gd" type="Script" id=2]
+[ext_resource path="res://Image Generation/FileDialog.gd" type="Script" id=3]
+[ext_resource path="res://Image Generation/ColorRect.gd" type="Script" id=4]
 
 [node name="world" type="Node2D"]
 script = ExtResource( 2 )
