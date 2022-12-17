@@ -8,9 +8,9 @@ func printSetup():
 	var SF = Global.scoreFunction
 	match(SF):
 		0:
-			print([Global.multRange,Global.biasRange,Global.Iterations,"contrast"])
+			print([Global.multRange,Global.biasRange,Global.step_size,Global.Iterations,"contrast"])
 		1:
-			print([Global.multRange,Global.biasRange,Global.Iterations,"referenceError"])
+			print([Global.multRange,Global.biasRange,Global.step_size,Global.Iterations,"referenceError"])
 		_:
 			push_error("SF != (0 or 1)")
 
@@ -23,23 +23,32 @@ func selector():
 		s = 3
 	if Input.is_action_pressed("4"):
 		s = 4
+	if Input.is_action_pressed("5"):
+		s = 5
 	
 	match(s):
 		1:
 			if Input.is_action_pressed("Kp-Up"):
-				Global.multRange += 0.01
+				Global.multRange += Global.step_size
 				printSetup()
 			if Input.is_action_pressed("Kp-Down") && (Global.multRange > 0):
-				Global.multRange -= 0.01
+				Global.multRange -= Global.step_size
 				printSetup()
 		2:
 			if Input.is_action_pressed("Kp-Up"):
-				Global.biasRange += 0.01
+				Global.biasRange += Global.step_size
 				printSetup()
 			if Input.is_action_pressed("Kp-Down") && (Global.biasRange > 0):
-				Global.biasRange -= 0.01
+				Global.biasRange -= Global.step_size
 				printSetup()
 		3:
+			if Input.is_action_pressed("Kp-Up"):
+				Global.step_size = Global.step_size * 10.0
+				printSetup()
+			if Input.is_action_pressed("Kp-Down") && (Global.step_size > 0):
+				Global.step_size = Global.step_size / 10.0
+				printSetup()
+		4:
 			if Input.is_action_pressed("Kp-Up"):
 				Global.Iterations += 10.0
 				Global.currentIteration += 10.0
@@ -48,7 +57,7 @@ func selector():
 				Global.Iterations -= 10.0
 				Global.currentIteration -= 10.0
 				printSetup()
-		4:
+		5:
 			if Input.is_action_just_pressed("Kp-Up"):
 				if Global.scoreFunction < 1:
 					Global.scoreFunction += 1
