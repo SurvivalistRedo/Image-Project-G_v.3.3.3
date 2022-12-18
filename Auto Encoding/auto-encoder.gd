@@ -24,8 +24,8 @@ func _ready(should_load = false):
 	NeuralNet = Neural_Network.new()
 	NeuralNet.activation_function = 1 # 1 = GeLu
 	randomize()
-	var q = 30.0
-	NeuralNet.initialize(3,[q,q,3,q,q,3],1.0/q)
+	var NC = 30.0 # node count
+	NeuralNet.initialize(3,[NC,NC,3,NC,NC,3],1.0/NC)
 	if should_load:
 		gradientStep = null
 		loss = null
