@@ -9,3 +9,7 @@ var step_size = 0.01 # 0.01
 var scoreFunction = 1
 var Iterations = 1000
 var currentIteration = 1000
+
+func _process(_delta):
+	if Input.is_action_pressed("ui_cancel"):
+		get_tree().change_scene("res://menu.tscn")
