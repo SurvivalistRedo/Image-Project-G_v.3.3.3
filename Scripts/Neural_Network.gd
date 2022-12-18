@@ -4,6 +4,8 @@ class_name Neural_Network
 
 var servingNimage = false
 
+var AF = arrayFunctions.new()
+
 var nodesPerLayer = [] # Amount of Nodes per each layer, with quantity of layers being assumed from nodesPerLayer.size()
 var networkArray = []  # Array of Network
 var inputArray = []    # Array of Nets Inputs
@@ -150,76 +152,6 @@ func processOutputs(layerToInsert = 0):
 			return [color_buffer.r,color_buffer.g,color_buffer.b]
 	else:
 		return layerOutputs
-func pairArrayAbsoluteDifference(array1,array2):
-	var array_buffer = []
-	if array1.size() != array2.size():
-		push_error("array1.size() != array2.size()")
-		print("pairArrayAbsoluteDifference(",array1,",",array2,")")
-		get_tree().quit()
-	else:
-		for n in range(0, array1.size()):
-			if (typeof(array1[n]) == TYPE_ARRAY) && (typeof(array2[n]) == TYPE_ARRAY):
-				array_buffer.append(pairArrayAbsoluteDifference(array1[n],array2[n]).duplicate(true))
-			elif (typeof(array1[n]) != TYPE_ARRAY) && (typeof(array2[n]) != TYPE_ARRAY):
-				array_buffer.append( abs( array1[n] - array2[n] ) )
-			else:
-				push_error("bruh idk bug in Neural_Network.pairArrayAbsoluteDifference()")
-				get_tree().quit()
-		return array_buffer.duplicate(true)
-func pairArraySubtract(array1,array2):
-	var array_buffer = []
-	if array1.size() != array2.size():
-		push_error("array1.size() != array2.size()")
-		print("pairArraySubtract(",array1,",",array2,")")
-		get_tree().quit()
-	else:
-		for n in range(0, array1.size()):
-			if (typeof(array1[n]) == TYPE_ARRAY) && (typeof(array2[n]) == TYPE_ARRAY):
-				array_buffer.append(pairArraySubtract(array1[n],array2[n]).duplicate(true))
-			elif (typeof(array1[n]) != TYPE_ARRAY) && (typeof(array2[n]) != TYPE_ARRAY):
-				array_buffer.append( array1[n] - array2[n] )
-			else:
-				push_error("bruh idk bug in Neural_Network.pairArraySubtract()")
-				get_tree().quit()
-		return array_buffer.duplicate(true)
-func pairArrayAdd(array1,array2):
-	var array_buffer = []
-	if array1.size() != array2.size():
-		push_error("array1.size() != array2.size()")
-		print("pairArrayAdd(",array1,",",array2,")")
-		get_tree().quit()
-	else:
-		for n in range(0,array1.size()):
-			if (typeof(array1[n]) == TYPE_ARRAY) && (typeof(array2[n]) == TYPE_ARRAY):
-				array_buffer.append(pairArrayAdd(array1[n],array2[n]).duplicate(true))
-			elif (typeof(array1[n]) != TYPE_ARRAY) && (typeof(array2[n]) != TYPE_ARRAY):
-				array_buffer.append( array1[n] + array2[n] )
-			else:
-				push_error("bruh idk bug in Neural_Network.pairArrayAdd()")
-				get_tree().quit()
-		return array_buffer.duplicate(true)
-func multiplyArray(array,multiplier):
-	var array_buffer = []
-	for n in array.size():
-		if typeof(array[n]) == TYPE_ARRAY:
-			array_buffer.append(multiplyArray(array[n],multiplier).duplicate(true))
-		elif typeof(array[n]) != TYPE_ARRAY:
-			array_buffer.append( array[n] * multiplier )
-		else:
-			push_error("bruh idk bug in Neural_Network.multiplyArray()")
-			get_tree().quit()
-	return array_buffer.duplicate(true)
-func divideArray(array,denominator):
-	var array_buffer = []
-	for n in array.size():
-		if typeof(array[n]) == TYPE_ARRAY:
-			array_buffer.append(divideArray(array[n],denominator).duplicate(true))
-		elif typeof(array[n]) != TYPE_ARRAY:
-			array_buffer.append( array[n] / denominator )
-		else:
-			push_error("bruh idk bug in Neural_Network.divideArray()")
-			get_tree().quit()
-	return array_buffer.duplicate(true)
 
 func generateRandomStepArray(currentLayer,i_array_buffer,i_range):
 	i_array_buffer = []
@@ -254,16 +186,16 @@ func NetParametersRandomStep():
 			NAS_nMAS[l][n].append(nMASB.duplicate(true))
 			NAS_nBS[l][n].append(nBSB)
 			
-			networkArray[l][n][0] = pairArrayAdd(networkArray[l][n][0],nMASB.duplicate(true))
+			networkArray[l][n][0] = AF.pairArrayAdd(networkArray[l][n][0],nMASB.duplicate(true))
 			networkArray[l][n][1] = networkArray[l][n][1] + nBSB
-	return pairArraySubtract(networkArray,prevNetworkArray)
+	return AF.pairArraySubtract(networkArray,prevNetworkArray)
 func NetAddParameterStep(parameterStep,i_steps = 1,record = false):
 	if record:
 		NAS_nPS_H.append(parameterStep.duplicate(true))
 	for l in range(0,nodesPerLayer.size()): # for layer in range(0, layerAmount)
 		for n in range(0,nodesPerLayer[l]): # for node in range(0, nodeAmount)
-			var averagedGradientStep = divideArray(parameterStep[l][n][0].duplicate(true),i_steps)
-			networkArray[l][n][0] = pairArrayAdd(networkArray[l][n][0],averagedGradientStep.duplicate(true))
+			var averagedGradientStep = AF.divideArray(parameterStep[l][n][0].duplicate(true),i_steps)
+			networkArray[l][n][0] = AF.pairArrayAdd(networkArray[l][n][0],averagedGradientStep.duplicate(true))
 			networkArray[l][n][1] = networkArray[l][n][1] + (parameterStep[l][n][1]/i_steps)
 func ReverseLastNetParametersRandomStep():
 	if NAS_nPS_H.size()-1 < 0:
@@ -273,12 +205,12 @@ func ReverseLastNetParametersRandomStep():
 		for n in range(0,nodesPerLayer[l]): # for node in range(0, nodeAmount)
 			nMASB = NAS_nPS_H[NAS_nPS_H.size()-1][l][n][0].duplicate(true)
 			nBSB = NAS_nPS_H[NAS_nPS_H.size()-1][l][n][1]
-			networkArray[l][n][0] = pairArraySubtract(networkArray[l][n][0],nMASB)
+			networkArray[l][n][0] = AF.pairArraySubtract(networkArray[l][n][0],nMASB)
 			networkArray[l][n][1] = networkArray[l][n][1] - nBSB
 	NAS_nPS_H.remove(NAS_nPS_H.size()-1)
 
 func signFlipNetworkArray():
-	networkArray = multiplyArray(networkArray,-1.0).duplicate(true)
+	networkArray = AF.multiplyArray(networkArray,-1.0).duplicate(true)
 
 func gradientDescentSingleLayer(layer,targetOutput,learningRate):
 	var outputs = processOutputs()

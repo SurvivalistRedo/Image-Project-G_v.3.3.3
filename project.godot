@@ -30,6 +30,11 @@ _global_script_classes=[ {
 "path": "res://Scripts/Neural_Network.gd"
 }, {
 "base": "Node",
+"class": "arrayFunctions",
+"language": "GDScript",
+"path": "res://Scripts/arrayFunctions.gd"
+}, {
+"base": "Node",
 "class": "varSweep",
 "language": "GDScript",
 "path": "res://Auto Encoding/3dSweep.gd"
@@ -39,6 +44,7 @@ _global_script_class_icons={
 "Input_Handler": "",
 "MLP_file": "",
 "Neural_Network": "",
+"arrayFunctions": "",
 "varSweep": ""
 }
 
