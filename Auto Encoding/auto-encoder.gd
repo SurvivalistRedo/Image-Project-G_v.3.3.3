@@ -3,6 +3,8 @@ extends Node2D
 var NeuralNet = Neural_Network.new()
 var archivedNet = MLP_file.new()
 
+var AF = arrayFunctions.new()
+
 var gradientStep = null
 var loss = null
 var steps = 0
@@ -155,17 +157,17 @@ func _process(delta):
 	var gs4 = NeuralNet.gradientDescentSingleLayer(4,netOutputs[0],l)
 	var gs5 = NeuralNet.gradientDescentSingleLayer(5,rgbTrue,l)
 	if gradientStep == null:
-		gradientStep = NeuralNet.pairArrayAdd(NeuralNet.pairArrayAdd(gs3,gs4),gs5)
+		gradientStep = AF.pairArrayAdd(AF.pairArrayAdd(gs3,gs4),gs5)
 	else:
-		gradientStep = NeuralNet.pairArrayAdd(gradientStep,NeuralNet.pairArrayAdd(NeuralNet.pairArrayAdd(gs3,gs4),gs5))
+		gradientStep = AF.pairArrayAdd(gradientStep,AF.pairArrayAdd(AF.pairArrayAdd(gs3,gs4),gs5))
 	steps += 1
 	
 	if loss == null:
-		#loss = NeuralNet.pairArrayAbsoluteDifference(rgbTrue,netRGBestimate)
-		loss = NeuralNet.pairArrayAbsoluteDifference(rgbTrue,[0.5,0.5,0.5])
+		loss = AF.pairArrayAbsoluteDifference(rgbTrue,netRGBestimate)
+		#loss = AF.pairArrayAbsoluteDifference(rgbTrue,[0.5,0.5,0.5])
 	else:
-		#loss = NeuralNet.pairArrayAdd(loss,NeuralNet.pairArrayAbsoluteDifference(rgbTrue,netRGBestimate))
-		loss = NeuralNet.pairArrayAdd(loss,NeuralNet.pairArrayAbsoluteDifference(rgbTrue,[0.5,0.5,0.5]))
+		loss = AF.pairArrayAdd(loss,AF.pairArrayAbsoluteDifference(rgbTrue,netRGBestimate))
+		#loss = AF.pairArrayAdd(loss,AF.pairArrayAbsoluteDifference(rgbTrue,[0.5,0.5,0.5]))
 	
 	if steps >= data_set.size() - 1.0:
 		NeuralNet.NetAddParameterStep(gradientStep,steps+1.0)
