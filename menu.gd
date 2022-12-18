@@ -28,12 +28,23 @@ func step(x,steps,upper_bound):
 	return floor((mod(x,upper_bound)/upper_bound)*steps)
 
 func _process(_delta):
+	var clicked = null
+	if Input.is_action_pressed("Left Click"):
+		clicked = true
+	else:
+		clicked = false
+	
 	var ma = mouse_angle() # mouse angle with origin at center of screen
 	if ma == null:
 		pass
 	else:
-		var array_size = 4.0
-		ma = step(ma,array_size,2.0*PI)
-		var brightness = (ma / (array_size-1.0))
-		print(brightness)
-		get_node("ColorRect").modulate = Color(brightness,brightness,brightness)
+		var array_size = Global.scenes.size()
+		if array_size > 0:
+			ma = step(ma,array_size,2.0*PI)
+			var brightness = (ma / (array_size-1.0)) / 2.0
+			get_node("ColorRect").modulate = Color.from_hsv(brightness,1.0,0.1)
+			get_node("RichTextLabel").text = Global.scenes[ma]
+			if clicked:
+				get_tree().change_scene(Global.scenes[ma])
+		else:
+			pass

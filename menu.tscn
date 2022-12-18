@@ -11,3 +11,12 @@ margin_bottom = 1000.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_right = 500.0
+margin_bottom = 500.0
+rect_scale = Vector2( 2, 2 )
+text = "Default Text"
+__meta__ = {
+"_edit_use_anchors_": false
+}
