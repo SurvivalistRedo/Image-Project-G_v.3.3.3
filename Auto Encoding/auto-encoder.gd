@@ -22,9 +22,10 @@ func _ready(should_load = false):
 	var dsweep = varSweep.new()
 	data_set = dsweep.generateDimensionSet(10.0).duplicate(true)
 	NeuralNet = Neural_Network.new()
-	NeuralNet.activation_function = 1
+	NeuralNet.activation_function = 1 # 1 = GeLu
 	randomize()
-	NeuralNet.initialize(3,[30,30,3,30,30,3],0.0)
+	var q = 30.0
+	NeuralNet.initialize(3,[q,q,3,q,q,3],1.0/q)
 	if should_load:
 		gradientStep = null
 		loss = null
