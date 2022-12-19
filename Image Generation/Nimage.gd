@@ -32,7 +32,8 @@ func _ready():
 	NeuralNet = Neural_Network.new()
 	NeuralNet.servingNimage = true
 	NeuralNet.activation_function = 3 # 3 = sin
-	NeuralNet.initialize(2,[100,50,10,3])
+	NeuralNet.initialize(2,[5,5,3])
+	print(NeuralNet.backflowingNodeConnections())
 
 func _process(_delta):
 	InputHandler.selector()

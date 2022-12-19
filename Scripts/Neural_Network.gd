@@ -48,6 +48,24 @@ func initialize(inputArraySize,iNodesPerLayer,mOffset = 0.0):
 	#printNetwork()
 	processOutputs()
 
+func backflowingNodeConnections():
+	var array_buffer = []
+	for layer in networkArray.size():
+		layer = networkArray.size()-1-layer
+		for node in networkArray[layer].size():
+			if layer == networkArray.size()-1:
+				array_buffer.append([layer,node])
+			else:
+				for i in array_buffer.size():
+					array_buffer[i].append(allNodesInLayer(layer-1).duplicate(true))
+
+	return array_buffer
+func allNodesInLayer(layer):
+	var array_buffer = []
+	for node in networkArray[layer].size():
+		array_buffer.append([layer,node])
+	return array_buffer
+
 func printNetwork():
 	print()
 	for input in range(0,inputArray.size()):
@@ -164,6 +182,8 @@ func generateRandomStepArray(currentLayer,i_array_buffer,i_range):
 			#i_array_buffer.append(rand_range(-i_range/sqrt(i+1.0),i_range/sqrt(i+1.0)))
 			i_array_buffer.append(rand_range(-i_range,i_range))
 	return i_array_buffer.duplicate(true)
+func signFlipNetworkArray():
+	networkArray = AF.multiplyArray(networkArray,-1.0).duplicate(true)
 
 func NetParametersRandomStep():
 	var prevNetworkArray = networkArray.duplicate(true)
@@ -208,9 +228,6 @@ func ReverseLastNetParametersRandomStep():
 			networkArray[l][n][0] = AF.pairArraySubtract(networkArray[l][n][0],nMASB)
 			networkArray[l][n][1] = networkArray[l][n][1] - nBSB
 	NAS_nPS_H.remove(NAS_nPS_H.size()-1)
-
-func signFlipNetworkArray():
-	networkArray = AF.multiplyArray(networkArray,-1.0).duplicate(true)
 
 func gradientDescentSingleLayer(layer,targetOutput,learningRate):
 	var outputs = processOutputs()
