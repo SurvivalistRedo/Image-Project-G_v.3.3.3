@@ -4,6 +4,8 @@ var NeuralNet
 var ImageHandler
 var InputHandler
 
+var AF = arrayFunctions.new()
+
 var record = 0
 var eRecord = 0
 var printSumRecord = true
@@ -13,6 +15,7 @@ var graph_size = 5
 var graph_origin = Vector2(0,0)
 
 var iterating = false
+var anneal = true
 
 var printProgress = true
 
@@ -31,20 +34,30 @@ func _ready():
 	ImageHandler = Image_Handler.new()
 	NeuralNet = Neural_Network.new()
 	NeuralNet.servingNimage = true
-	NeuralNet.activation_function = 3 # 3 = sin
+	NeuralNet.activation_function = 3 # {Sigmoid,GeLu,ReLu,Sin} = {0,1,2,3}
 	NeuralNet.initialize(2,[5,5,3])
 	print(NeuralNet.backflowingNodeConnections())
 
 func _process(_delta):
 	InputHandler.selector()
 	
+	if Input.is_key_pressed(KEY_M):
+		if anneal:
+			anneal = false
+			print("anneal off")
+		else:
+			anneal = true
+			print("anneal on")
+	
 	graphInput()
 	
 	if Input.is_action_just_pressed("ui_focus_next"):
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_just_pressed("ui_accept"):
+		var buffer = resolution
 		resolution = 1000
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
+		resolution = buffer
 	
 	if Input.is_action_pressed("X"):
 		iterating = false
@@ -123,9 +136,9 @@ func iterate():
 				parameterStepQueue.append(NeuralNet.NetParametersRandomStep().duplicate(true))
 				
 				if parameterStepQueue.size() == 1:
-					parameterStepQueue[0] = NeuralNet.multiplyArray(parameterStepQueue[0],-1.0).duplicate(true)
+					parameterStepQueue[0] = AF.multiplyArray(parameterStepQueue[0],-1.0).duplicate(true)
 				elif parameterStepQueue.size() > 1:
-					parameterStepQueue[-1] = NeuralNet.multiplyArray(parameterStepQueue[-1],-1.0).duplicate(true)
+					parameterStepQueue[-1] = AF.multiplyArray(parameterStepQueue[-1],-1.0).duplicate(true)
 				else:
 					push_error("wahhh")
 					get_tree().quit()
@@ -207,9 +220,6 @@ func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
 		sum_record = ImageHandler.calculateError(referenceImage,Neural_img)
 		eRecord = sum_record[1]
 	
-	if printSumRecord:
-		print(sum_record)
-	
 	var isWorse
 	if reverseEnum == 0:
 		pass
@@ -217,8 +227,19 @@ func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
 		if sum_record[0] == sum_record[1]:
 			isWorse = false
 		else:
-			iNeuralNet.ReverseLastNetParametersRandomStep()
-			isWorse = true
+			if (anneal) && (rand_range(0.0,1.0) < sum_record[0]/10.0): # do following code with a % chance
+				sum_record[1] = sum_record[0]
+				if costEnum == 0:
+					record = sum_record[1]
+				if costEnum == 1:
+					eRecord = sum_record[1]
+				isWorse = false
+			else:
+				iNeuralNet.ReverseLastNetParametersRandomStep()
+				isWorse = true
+	
+	if printSumRecord:
+		print(sum_record)
 	
 	Neural_img.unlock()
 	var txt = ImageTexture.new()

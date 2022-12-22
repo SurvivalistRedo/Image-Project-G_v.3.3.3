@@ -22,7 +22,7 @@ func _ready(should_load = false):
 	var dsweep = varSweep.new()
 	data_set = dsweep.generateDimensionSet(10.0).duplicate(true)
 	NeuralNet = Neural_Network.new()
-	NeuralNet.activation_function = 1 # 1 = GeLu
+	NeuralNet.activation_function = 1 # {Sigmoid,GeLu,ReLu,Sin} = {0,1,2,3}
 	randomize()
 	var NC = 30.0 # node count
 	NeuralNet.initialize(3,[NC,NC,3,NC,NC,3],1.0/NC)

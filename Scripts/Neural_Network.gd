@@ -49,22 +49,73 @@ func initialize(inputArraySize,iNodesPerLayer,mOffset = 0.0):
 	processOutputs()
 
 func backflowingNodeConnections():
-	var array_buffer = []
-	for layer in networkArray.size():
-		layer = networkArray.size()-1-layer
-		for node in networkArray[layer].size():
-			if layer == networkArray.size()-1:
-				array_buffer.append([layer,node])
-			else:
-				for i in array_buffer.size():
-					array_buffer[i].append(allNodesInLayer(layer-1).duplicate(true))
-
+	var array_buffer = nodesPerLayer.duplicate(true)
+	var index = []
+	array_buffer.invert()
+	for depth in networkArray.size():
+		index.append([])
+		for i in depth+1:
+			index[depth].append(array_buffer[i]-1)
+	
+	var permutationsAllDepths = []
+	for depth in index.size():
+		permutationsAllDepths += cappedPermutations(index[depth]).duplicate(true)
+	
+	return permutationsAllDepths
+func cappedPermutations(array):
+	var array_buffer = array.duplicate(true)
+	array_buffer = AF.multiplyArray(array_buffer,0).duplicate(true)
+	
+	var permutations = []
+	
+	var haventReachedEnd = true
+	while haventReachedEnd:
+		if array_buffer == array:
+			permutations.append(array_buffer.duplicate(true))
+			haventReachedEnd = false
+		else:
+			permutations.append(array_buffer.duplicate(true))
+			array_buffer = plusone(array_buffer,array)
+	
+	return permutations
+func plusone(array,index):
+	var array_buffer = array.duplicate(true)
+	
+	array_buffer[array_buffer.size()-1] += 1
+	
+	var overflowedDigits = overflowCheck(array_buffer,index)
+	var overflow = intBool(overflowedDigits.size())
+	
+	while overflow:
+		array_buffer[overflowedDigits[0]] = 0
+		if overflowedDigits[0]-1 >= 0:
+			array_buffer[overflowedDigits[0]-1] += 1
+		
+		overflowedDigits = overflowCheck(array_buffer,index)
+		overflow = intBool(overflowedDigits.size())
+	
 	return array_buffer
-func allNodesInLayer(layer):
-	var array_buffer = []
-	for node in networkArray[layer].size():
-		array_buffer.append([layer,node])
-	return array_buffer
+func overflowCheck(arr,index):
+	if arr.size() != index.size():
+		push_error("arr.size() != index.size()")
+		get_tree().quit()
+	elif arr.size() == index.size():
+		var array_buffer = []
+		for i in arr.size():
+			if arr[i] > index[i]:
+				array_buffer.append(i)
+		return array_buffer
+	else:
+		push_error("else")
+		get_tree().quit()
+func intBool(x : int):
+	if x == 0:
+		return false
+	elif x == 1:
+		return true
+	else:
+		push_error("(x != 0) && (x != 1)")
+		get_tree().quit()
 
 func printNetwork():
 	print()
@@ -162,11 +213,25 @@ func processOutputs(layerToInsert = 0):
 		layerOutputs.append(currentLayerOutputs.duplicate(true))
 	
 	if servingNimage:
-		if true:
-			var color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+		if false:
+			var color_buffer
+			match activation_function:
+				0:
+					color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+				3:
+					color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+				_:
+					color_buffer = Color.from_hsv(Sigmoid(currentLayerOutputs.duplicate(true)[0],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[1],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[2],1.0))
 			return [color_buffer.r,color_buffer.g,color_buffer.b]
 		else:
-			var color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+			var color_buffer
+			match activation_function:
+				0:
+					color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+				3:
+					color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+				_:
+					color_buffer = Color(Sigmoid(currentLayerOutputs.duplicate(true)[0],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[1],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[2],1.0))
 			return [color_buffer.r,color_buffer.g,color_buffer.b]
 	else:
 		return layerOutputs
