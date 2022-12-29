@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Image Generation/Nimage.gd" type="Script" id=1]
-[ext_resource path="res://Image Generation/FileDialog.gd" type="Script" id=2]
+[ext_resource path="res://Image Generation/save_location.gd" type="Script" id=2]
 [ext_resource path="res://Image Generation/ColorRect.gd" type="Script" id=3]
 [ext_resource path="res://Image Generation/world.gd" type="Script" id=4]
+[ext_resource path="res://Image Generation/reference_location.gd" type="Script" id=5]
 
 [node name="world" type="Node2D"]
 script = ExtResource( 4 )
@@ -20,15 +21,31 @@ __meta__ = {
 centered = false
 script = ExtResource( 1 )
 
-[node name="FileDialog" type="FileDialog" parent="."]
-window_title = "Open a File"
-mode = 0
+[node name="save_location" type="FileDialog" parent="."]
+window_title = "Open a Directory"
+mode = 2
 access = 2
-current_dir = "/Users/Redo/Desktop/Development/Image Project G_v.3.3.3"
-current_path = "/Users/Redo/Desktop/Development/Image Project G_v.3.3.3/"
+current_dir = "/Users"
+current_path = "/Users/"
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="file_selected" from="FileDialog" to="FileDialog" method="_on_FileDialog_file_selected"]
+[node name="reference_location" type="FileDialog" parent="save_location"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 348.0
+margin_bottom = 138.0
+window_title = "Open a File"
+mode = 0
+access = 2
+current_dir = "/Users"
+current_path = "/Users/"
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="dir_selected" from="save_location" to="save_location" method="_on_save_location_dir_selected"]
+[connection signal="file_selected" from="save_location/reference_location" to="save_location/reference_location" method="_on_reference_location_file_selected"]

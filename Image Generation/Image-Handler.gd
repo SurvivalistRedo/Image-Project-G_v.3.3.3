@@ -76,14 +76,14 @@ func calculateContrast(reference):
 	if sum > record:
 		record = sum
 	return [sum,record]
-func calculateError(iReference, examinee):
+func calculateError(iReference, examinee, saveDirectory):
 	var width = examinee.get_width()
 	var height = examinee.get_height()
 	
 	iReference.unlock()
 	iReference.resize(width,height,4)
 	iReference.lock()
-	iReference.save_png("res://Images/rrr.png")
+	iReference.save_png(saveDirectory + "/rrr.png")
 	var error = 0
 	for x in range(0,width):
 		for y in range(0,height):

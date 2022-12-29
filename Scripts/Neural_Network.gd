@@ -20,6 +20,8 @@ const e = 2.718
 
 var activation_function = -1
 enum {Sigmoid,GeLu,ReLu,Sin}
+var color_mode = -1
+enum {hsv,rgb}
 
 func initialize(inputArraySize,iNodesPerLayer,mOffset = 0.0):
 	# Creates Network
@@ -59,9 +61,10 @@ func backflowingNodeConnections():
 	
 	var permutationsAllDepths = []
 	for depth in index.size():
-		permutationsAllDepths += cappedPermutations(index[depth]).duplicate(true)
+		permutationsAllDepths += [cappedPermutations(index[depth]).duplicate(true).size()]
+		print("Depth ",depth," done, Size ",permutationsAllDepths[depth])
 	
-	return permutationsAllDepths
+	#return permutationsAllDepths
 func cappedPermutations(array):
 	var array_buffer = array.duplicate(true)
 	array_buffer = AF.multiplyArray(array_buffer,0).duplicate(true)
@@ -213,26 +216,30 @@ func processOutputs(layerToInsert = 0):
 		layerOutputs.append(currentLayerOutputs.duplicate(true))
 	
 	if servingNimage:
-		if false:
-			var color_buffer
-			match activation_function:
-				0:
-					color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
-				3:
-					color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
-				_:
-					color_buffer = Color.from_hsv(Sigmoid(currentLayerOutputs.duplicate(true)[0],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[1],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[2],1.0))
-			return [color_buffer.r,color_buffer.g,color_buffer.b]
-		else:
-			var color_buffer
-			match activation_function:
-				0:
-					color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
-				3:
-					color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
-				_:
-					color_buffer = Color(Sigmoid(currentLayerOutputs.duplicate(true)[0],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[1],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[2],1.0))
-			return [color_buffer.r,color_buffer.g,color_buffer.b]
+		match color_mode:
+			0:
+				var color_buffer
+				match activation_function:
+					0:
+						color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+					3:
+						color_buffer = Color.from_hsv(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+					_:
+						color_buffer = Color.from_hsv(Sigmoid(currentLayerOutputs.duplicate(true)[0],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[1],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[2],1.0))
+				return [color_buffer.r,color_buffer.g,color_buffer.b]
+			1:
+				var color_buffer
+				match activation_function:
+					0:
+						color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+					3:
+						color_buffer = Color(f(currentLayerOutputs.duplicate(true)[0]),f(currentLayerOutputs.duplicate(true)[1]),f(currentLayerOutputs.duplicate(true)[2]))
+					_:
+						color_buffer = Color(Sigmoid(currentLayerOutputs.duplicate(true)[0],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[1],1.0),Sigmoid(currentLayerOutputs.duplicate(true)[2],1.0))
+				return [color_buffer.r,color_buffer.g,color_buffer.b]
+			_:
+				push_error("color_mode not properly set")
+				get_tree().quit()
 	else:
 		return layerOutputs
 

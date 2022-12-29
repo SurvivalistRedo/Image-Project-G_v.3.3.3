@@ -23,6 +23,7 @@ enum {contrast,referenceError}
 enum {dontReverseIfWorse,doReverseIfWorse}
 enum {returnImage,returnTexture}
 
+var saveDirectory = "no input"
 var referencePath = "no input"
 
 var parameterStepQueue = []
@@ -35,8 +36,9 @@ func _ready():
 	NeuralNet = Neural_Network.new()
 	NeuralNet.servingNimage = true
 	NeuralNet.activation_function = 3 # {Sigmoid,GeLu,ReLu,Sin} = {0,1,2,3}
-	NeuralNet.initialize(2,[5,5,3])
-	print(NeuralNet.backflowingNodeConnections())
+	NeuralNet.color_mode = 0 # {hsv,rgb} = {0,1}
+	NeuralNet.initialize(2,[50,25,10,3])
+	NeuralNet.backflowingNodeConnections()
 
 func _process(_delta):
 	InputHandler.selector()
@@ -54,10 +56,13 @@ func _process(_delta):
 	if Input.is_action_just_pressed("ui_focus_next"):
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
 	if Input.is_action_just_pressed("ui_accept"):
-		var buffer = resolution
+		var buffer1 = resolution
+		var buffer2 = printProgress
 		resolution = 1000
+		printProgress = true
 		processNeuralImage(NeuralNet,Global.scoreFunction,dontReverseIfWorse)
-		resolution = buffer
+		resolution = buffer1
+		printProgress = buffer2
 	
 	if Input.is_action_pressed("X"):
 		iterating = false
@@ -70,6 +75,17 @@ func _process(_delta):
 			printSumRecord = true
 	
 	if Input.is_action_just_pressed("C"):
+		match NeuralNet.color_mode:
+			0:
+				NeuralNet.color_mode = 1 # {hsv,rgb} = {0,1}
+				print("NeuralNet.color_mode = 1")
+			1:
+				NeuralNet.color_mode = 0 # {hsv,rgb} = {0,1}
+				print("NeuralNet.color_mode = 0")
+			_:
+				print("(NeuralNet.color_mode != 0) && (NeuralNet.color_mode != 1)")
+	
+	if Input.is_action_just_pressed("R"):
 		clearRecords()
 	
 	if Input.is_action_pressed("ui_page_up"):
@@ -201,7 +217,7 @@ func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
 	var Neural_img = Image.new()
 	Neural_img.create_from_data(resolution, resolution, false, Image.FORMAT_RGB8, PoolByteArray(ImageHandler.ONEtoTWOFIFTYFIVE(OutputMatrix)))
 	Neural_img.lock()
-	Neural_img.save_png("res://Images/aaa.png")
+	Neural_img.save_png(saveDirectory + "/aaa.png")
 	
 	var referenceImage = Image.new()
 	referenceImage.load(referencePath)
@@ -217,7 +233,7 @@ func processNeuralImage(iNeuralNet,costEnum,reverseEnum):
 		record = sum_record[1]
 	if costEnum == 1:
 		ImageHandler.update(resolution,record,eRecord)
-		sum_record = ImageHandler.calculateError(referenceImage,Neural_img)
+		sum_record = ImageHandler.calculateError(referenceImage,Neural_img,saveDirectory)
 		eRecord = sum_record[1]
 	
 	var isWorse
